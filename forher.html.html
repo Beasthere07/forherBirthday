@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Aish 💖</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  overflow:hidden;
+  background:#000;
+  font-family:'Poppins',sans-serif;
+  color:white;
+}
+
+/* Screens */
+.screen{
+  position:absolute;
+  width:100%;
+  height:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  transition:0.6s;
+}
+.hidden{
+  transform:translateX(-100%);
+  opacity:0;
+}
+
+/* Button */
+.btn{
+  margin-top:20px;
+  padding:14px 28px;
+  border:none;
+  border-radius:30px;
+  background:linear-gradient(45deg,#ff4da6,#ff80bf);
+  color:white;
+  font-size:16px;
+  transition:0.4s;
+  position:relative;
+}
+
+/* Playful move */
+.move-left{ transform:translateX(-120px) scale(1.1); }
+.move-right{ transform:translateX(120px) scale(1.1); }
+
+/* Hold effect */
+.btn::after{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  height:100%;
+  width:0%;
+  background:rgba(255,255,255,0.3);
+}
+.btn.hold::after{
+  width:100%;
+  transition:0.7s;
+}
+
+/* Title */
+h1{
+  font-family:'Great Vibes';
+  font-size:42px;
+  color:#ff80bf;
+}
+
+/* Glass box */
+.msg{
+  padding:25px;
+  border-radius:20px;
+  width:85%;
+  max-width:350px;
+  text-align:center;
+  background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(15px);
+  border:1px solid rgba(255,255,255,0.2);
+}
+.msg p{color:white;}
+.msg h1{color:#ff4da6;}
+
+/* Stars */
+.star{
+  position:absolute;
+  width:2px;
+  height:2px;
+  background:white;
+  animation:twinkle 2s infinite;
+}
+@keyframes twinkle{
+  50%{opacity:0.2;}
+}
+
+/* Castle */
+.castle{
+  position:absolute;
+  bottom:0;
+  width:100%;
+  height:180px;
+  background:#0a0a0a;
+  clip-path:polygon(0% 100%,10% 60%,20% 80%,30% 50%,40% 75%,50% 40%,60% 70%,70% 50%,80% 80%,90% 60%,100% 100%);
+}
+
+/* Hearts */
+.heart{
+  position:absolute;
+  width:50px;
+  height:50px;
+  background:#ff4da6;
+  transform:rotate(45deg);
+  animation:float 6s linear infinite;
+}
+.heart::before,.heart::after{
+  content:"";
+  position:absolute;
+  width:50px;
+  height:50px;
+  background:#ff4da6;
+  border-radius:50%;
+}
+.heart::before{ top:-25px;}
+.heart::after{ left:-25px;}
+
+@keyframes float{
+  from{transform:translateY(100vh) rotate(45deg);}
+  to{transform:translateY(-120vh) rotate(45deg);}
+}
+
+/* Fireworks */
+canvas{
+  position:fixed;
+  top:0;
+  left:0;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="fire"></canvas>
+<div class="castle"></div>
+
+<!-- SCREEN 1 (Normal Tap) -->
+<div class="screen" id="s1">
+  <h1>For Aish 💖</h1>
+  <p>Tap to begin ✨</p>
+  <button class="btn" onclick="next(1)">Tap</button>
+</div>
+
+<!-- SCREEN 2 (Playful Button) -->
+<div class="screen hidden" id="s2">
+  <h1>Happy Birthday 🎂</h1>
+  <p>Catch the button 😜</p>
+  <button class="btn" onclick="playTap(this,2)">Tap Me</button>
+</div>
+
+<!-- SCREEN 3 (Hold) -->
+<div class="screen hidden" id="s3">
+  <h1>✨</h1>
+  <p>Hold to unlock 💫</p>
+  <button class="btn"
+    onmousedown="hold(this,3)"
+    onmouseup="release(this)"
+    ontouchstart="hold(this,3)"
+    ontouchend="release(this)">Hold</button>
+</div>
+
+<!-- FINAL -->
+<div class="screen hidden" id="s4">
+  <div class="msg">
+    <h1>Aish 💖</h1>
+    <p>
+      You didn’t try…<br><br>
+      But still became special 💫<br><br>
+      And somehow… you stayed 🌸<br><br>
+      I hope your smile never fades 😊<br><br>
+      Happy Birthday 💕
+    </p>
+  </div>
+</div>
+
+<script>
+// NORMAL NEXT
+function next(n){
+  document.getElementById("s"+n).classList.add("hidden");
+  document.getElementById("s"+(n+1)).classList.remove("hidden");
+}
+
+// PLAYFUL BUTTON
+let count=0;
+function playTap(btn,n){
+  count++;
+  if(count==1){
+    if(Math.random()>0.5){
+      btn.classList.add("move-left");
+    }else{
+      btn.classList.add("move-right");
+    }
+    btn.innerText="Catch me 😜";
+  }else{
+    next(n);
+  }
+}
+
+// HOLD
+let timer;
+function hold(btn,n){
+  btn.classList.add("hold");
+  timer=setTimeout(()=>next(n),700);
+}
+function release(btn){
+  btn.classList.remove("hold");
+  clearTimeout(timer);
+}
+
+// STARS
+for(let i=0;i<100;i++){
+  let s=document.createElement("div");
+  s.className="star";
+  s.style.left=Math.random()*100+"%";
+  s.style.top=Math.random()*100+"%";
+  document.body.appendChild(s);
+}
+
+// FIREWORKS
+const c=document.getElementById("fire");
+const x=c.getContext("2d");
+c.width=innerWidth;
+c.height=innerHeight;
+
+let p=[];
+setInterval(()=>{
+  let X=Math.random()*c.width;
+  let Y=Math.random()*c.height/2;
+  for(let i=0;i<20;i++){
+    p.push({x:X,y:Y,dx:(Math.random()-0.5)*5,dy:(Math.random()-0.5)*5,l:80});
+  }
+},1200);
+
+function anim(){
+  x.fillStyle="rgba(0,0,0,0.2)";
+  x.fillRect(0,0,c.width,c.height);
+
+  p.forEach((a,i)=>{
+    x.fillStyle="hsl("+Math.random()*360+",100%,60%)";
+    x.fillRect(a.x,a.y,2,2);
+    a.x+=a.dx;
+    a.y+=a.dy;
+    a.l--;
+    if(a.l<=0) p.splice(i,1);
+  });
+
+  requestAnimationFrame(anim);
+}
+anim();
+
+// HEARTS LAST
+function startHearts(){
+  for(let i=0;i<25;i++){
+    let h=document.createElement("div");
+    h.className="heart";
+    h.style.left=Math.random()*100+"%";
+    document.body.appendChild(h);
+  }
+}
+</script>
+
+</body>
+</html>
